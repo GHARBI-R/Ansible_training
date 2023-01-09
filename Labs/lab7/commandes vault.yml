@@ -1,0 +1,8 @@
+1. Encrypter le fichier contenent le mot de passe
+   ansible-vault encrypt files/secrets/credentials.yml
+
+2. decrypter le fichier contenent le mot de passe
+   ansible-vault encrypt files/secrets/credentials.yml
+
+3. pour decrypter le mot de passe lors du lancememt du playbook on doit connaître la clé de chiffrement:
+   ansible-playbook -i hosts.yml --ask-vault-pass deploy.yml 
