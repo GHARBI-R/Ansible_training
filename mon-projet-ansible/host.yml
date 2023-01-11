@@ -1,0 +1,12 @@
+all:
+  vars:
+    ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+prod:
+  hosts:
+    client1:
+      ansible_host: 10.0.0.4
+
+stag:
+  hosts:
+    client2:
+      ansible_host: 10.0.0.5

@@ -1,0 +1,55 @@
+---
+- name: Install some package 
+  package: name={{ item }} state=present
+  loop:
+    - epel-release
+    - wget
+    - git
+    - yum-utils
+    - device-mapper-persistent-data
+    - lvm2
+    - python3
+    - python3-pip 
+
+- name: Add docker repositories
+  yum_repository:
+    name: docker
+    description: docker
+    baseurl: https://download.docker.com/linux/centos/7/x86_64/stable
+    enabled: yes
+
+- name: Install docker engine
+  package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+
+- name: Install docker-compose
+  get_url:
+    url: https://github.com/docker/compose/releases/download/1.29.2/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 0755
+- name: Enable and Start docker
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: docker python
+  pip:
+    name: docker-py
+    executable: pip3
+- name: Copy website file template
+  template:
+    src: "{{ file_template }}"
+    dest: "/home/admin/index.html"
+- name: Create Apache container
+  docker_container:
+    name: webapp
+    image: httpd
+    ports:
+        - "{{ webapp_port }}:{{ apache_port }}"
+    volumes:
+        - "/home/admin/index.html:/usr/local/apache2/htdocs/index.html"
